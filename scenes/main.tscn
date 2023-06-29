@@ -1,0 +1,131 @@
+[gd_scene load_steps=19 format=3 uid="uid://4i37pn3ydff4"]
+
+[ext_resource type="PackedScene" uid="uid://dvgidbl3ltmdn" path="res://scenes/train.tscn" id="1_nlvma"]
+[ext_resource type="Script" path="res://scenes/main.gd" id="1_vjsd3"]
+[ext_resource type="Script" path="res://scripts/TrackCreator.gd" id="2_48kb1"]
+[ext_resource type="PackedScene" uid="uid://bj4x0iefy4ia6" path="res://scenes/track.tscn" id="3_2c7ct"]
+[ext_resource type="PackedScene" uid="uid://cyqlrb2wix8ew" path="res://scenes/lake.tscn" id="3_mhjpy"]
+[ext_resource type="PackedScene" uid="uid://cpkr400q14cdg" path="res://scenes/death_screen.tscn" id="4_dfi8b"]
+[ext_resource type="Texture2D" uid="uid://bfglba3so7mpf" path="res://assets/background.png" id="4_qiowo"]
+[ext_resource type="Script" path="res://scenes/cam.gd" id="5_g0sca"]
+[ext_resource type="PackedScene" uid="uid://147twvrv78gm" path="res://scenes/mountain.tscn" id="6_qrdfr"]
+[ext_resource type="PackedScene" uid="uid://crtv4tl4huddk" path="res://scenes/menu.tscn" id="8_w8ig7"]
+[ext_resource type="Script" path="res://scripts/ScoreLabel.gd" id="10_xokvm"]
+[ext_resource type="Texture2D" uid="uid://df30aobinjufs" path="res://assets/tangent.png" id="12_x5ob4"]
+[ext_resource type="Script" path="res://scenes/TangentIndicator.gd" id="13_fuxar"]
+
+[sub_resource type="Gradient" id="Gradient_bt1j7"]
+colors = PackedColorArray(0.14246, 0.1394, 0.17, 1, 0.29219, 0.29219, 0.29219, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_r78kg"]
+noise_type = 3
+seed = 2
+frequency = 0.2677
+fractal_octaves = 10
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_r6p77"]
+height = 32
+color_ramp = SubResource("Gradient_bt1j7")
+noise = SubResource("FastNoiseLite_r78kg")
+
+[sub_resource type="LabelSettings" id="LabelSettings_o05q3"]
+font_size = 46
+
+[sub_resource type="LabelSettings" id="LabelSettings_wpjsw"]
+font_size = 46
+
+[node name="main" type="Node2D" node_paths=PackedStringArray("obstacle_timer", "obstacle_spawn", "train", "hs_label")]
+script = ExtResource("1_vjsd3")
+mountain_scene = ExtResource("6_qrdfr")
+lake_scene = ExtResource("3_mhjpy")
+obstacle_timer = NodePath("ObstacleTimer")
+obstacle_spawn = NodePath("Camera2D")
+death_screen = ExtResource("4_dfi8b")
+train = NodePath("Train")
+hs_label = NodePath("CanvasLayer/HighscoreLabel")
+
+[node name="TrackCreator" type="Node2D" parent="." node_paths=PackedStringArray("train")]
+script = ExtResource("2_48kb1")
+track_scene = ExtResource("3_2c7ct")
+train = NodePath("../Train")
+tangency_level = 0.2
+
+[node name="Train" parent="." instance=ExtResource("1_nlvma")]
+speed = 100
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(4320, 4320)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource("4_qiowo")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 4320, 4320)
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
+visible = false
+position = Vector2(-16, 544)
+texture = SubResource("NoiseTexture2D_r6p77")
+
+[node name="TangencyTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("train")]
+position_smoothing_enabled = true
+script = ExtResource("5_g0sca")
+train = NodePath("../Train")
+
+[node name="ObstacleTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Menu" parent="." instance=ExtResource("8_w8ig7")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer" node_paths=PackedStringArray("train")]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Score:"
+label_settings = SubResource("LabelSettings_o05q3")
+script = ExtResource("10_xokvm")
+train = NodePath("../../Train")
+
+[node name="HighscoreLabel" type="Label" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -223.0
+offset_bottom = 67.0
+grow_horizontal = 0
+text = "Highscore"
+label_settings = SubResource("LabelSettings_wpjsw")
+horizontal_alignment = 2
+
+[node name="TangentIndicator" type="TextureRect" parent="CanvasLayer"]
+modulate = Color(1, 1, 1, 0)
+texture_filter = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -75.0001
+offset_top = -183.0
+offset_right = 74.9999
+offset_bottom = -33.0001
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(1.065, 1.065)
+texture = ExtResource("12_x5ob4")
+stretch_mode = 4
+script = ExtResource("13_fuxar")
+
+[connection signal="tangent_created" from="TrackCreator" to="CanvasLayer/TangentIndicator" method="_on_track_creator_tangent_created"]
+[connection signal="tree_exiting" from="Train" to="." method="_on_train_tree_exiting"]
+[connection signal="timeout" from="TangencyTimer" to="TrackCreator" method="_on_tangency_timer_timeout"]
+[connection signal="timeout" from="ObstacleTimer" to="." method="_on_obstacle_timer_timeout"]

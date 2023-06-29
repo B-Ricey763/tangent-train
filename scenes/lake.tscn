@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyqlrb2wix8ew"]
+
+[ext_resource type="Texture2D" uid="uid://bp74ws3v5u05x" path="res://assets/water.png" id="1_pe00r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wmpdu"]
+radius = 32.0156
+
+[node name="Lake" type="StaticBody2D" groups=["obstacles"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_pe00r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_wmpdu")

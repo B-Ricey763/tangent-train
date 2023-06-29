@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvgidbl3ltmdn"]
+
+[ext_resource type="Texture2D" uid="uid://k2qyf150q3ru" path="res://assets/Train.png" id="1_1cpn7"]
+[ext_resource type="Script" path="res://scripts/train.gd" id="1_4104v"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n5ocg"]
+radius = 14.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m4131"]
+size = Vector2(26, 12)
+
+[node name="Train" type="CharacterBody2D"]
+script = ExtResource("1_4104v")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 1
+texture = ExtResource("1_1cpn7")
+
+[node name="TrackDetector" type="Area2D" parent="."]
+
+[node name="Hitbox" type="CollisionShape2D" parent="TrackDetector"]
+shape = SubResource("CircleShape2D_n5ocg")
+
+[node name="Hitter" type="Area2D" parent="."]
+
+[node name="Hitbox" type="CollisionShape2D" parent="Hitter"]
+shape = SubResource("RectangleShape2D_m4131")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="body_entered" from="TrackDetector" to="." method="_on_track_detector_body_entered"]
+[connection signal="body_entered" from="Hitter" to="." method="_on_hitter_body_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

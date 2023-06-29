@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://147twvrv78gm"]
+
+[ext_resource type="Texture2D" uid="uid://cyv2gyo0sqkc1" path="res://assets/mountain.png" id="1_0x6iq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_85eeu"]
+radius = 29.0689
+
+[node name="Mountain" type="StaticBody2D" groups=["obstacles"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("1_0x6iq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_85eeu")

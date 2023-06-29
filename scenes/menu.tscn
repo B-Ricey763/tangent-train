@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://crtv4tl4huddk"]
+
+[ext_resource type="Texture2D" uid="uid://ctmpeis86xvwk" path="res://assets/Title.png" id="1_ablhx"]
+[ext_resource type="Script" path="res://scenes/menu.gd" id="1_pwrnf"]
+[ext_resource type="Texture2D" uid="uid://b4l4o3pyck7ju" path="res://assets/play_button.png" id="2_7vhj0"]
+
+[node name="Menu" type="Control" node_paths=PackedStringArray("button")]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pwrnf")
+button = NodePath("CenterContainer/VBoxContainer/PlayButton")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.987
+offset_left = -9.0
+offset_top = -7.0
+offset_right = -5.0
+offset_bottom = -6.83008
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="CenterContainer/VBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(512, 256)
+layout_mode = 2
+texture = ExtResource("1_ablhx")
+
+[node name="PlayButton" type="TextureButton" parent="CenterContainer/VBoxContainer"]
+texture_filter = 1
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 2
+texture_normal = ExtResource("2_7vhj0")
+texture_pressed = ExtResource("2_7vhj0")
+texture_hover = ExtResource("2_7vhj0")
+texture_disabled = ExtResource("2_7vhj0")
+texture_focused = ExtResource("2_7vhj0")
+stretch_mode = 5
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

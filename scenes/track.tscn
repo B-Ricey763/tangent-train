@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://bj4x0iefy4ia6"]
+
+[ext_resource type="Texture2D" uid="uid://bwacfg2ip08pv" path="res://assets/Track.png" id="1_cx3q1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yhn5q"]
+resource_local_to_scene = true
+size = Vector2(0, 12)
+
+[node name="Track" type="StaticBody2D" groups=["tracks"]]
+texture_repeat = 2
+metadata/length = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 2
+texture = ExtResource("1_cx3q1")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_yhn5q")
